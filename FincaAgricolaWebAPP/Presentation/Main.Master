@@ -1,0 +1,89 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main.master.cs" Inherits="Presentation.Main" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Finca Agrícola App</title>
+    <link href="src/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="src/css/style.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <div class="container-xxl">
+    <form id="form1" runat="server">
+        <%--Aqui va lo que se repite en los demas formularios--%>
+        <div class="containerAside ">
+            <aside>
+                <div class="toggle">
+                    <div class="logo">
+                        <img src="images/logo.png" alt="" />
+                        <h2>Admin</h2>
+                    </div>
+                </div>
+                <div class="sidebar">
+                    <a href="Index.aspx">
+                        <span class="material-icons-sharp">Inicio
+                        </span>
+                    </a>
+                    <a href="WFUsers.aspx">
+                        <span class="material-icons-sharp">Usuarios
+                        </span>
+                    </a>
+                    <a href="WFFarm.aspx">
+                        <span class="material-icons-sharp">Finca
+                        </span>
+                    </a>
+                    <a href="WFSale.aspx">
+                        <span class="material-icons-sharp">Ventas
+                        </span>
+                    </a>
+                    <a href="WFCategory.aspx">
+                        <span class="material-icons-sharp">Categoría de Productos
+                        </span>
+                    </a>
+                    <a href="WFSupplier.aspx">
+                        <span class="material-icons-sharp">Proveedores
+                        </span>
+                    </a>
+                    <a href="WFClient.aspx">
+                        <span class="material-icons-sharp">Clientes
+                        </span>
+                    </a>
+                    <a href="WFWeather.aspx">
+                        <span class="material-icons-sharp">Climas
+                        </span>
+                    </a>
+                    <a href="WFInputs.aspx">
+                        <span class="material-icons-sharp">Insumos
+                        </span>
+                    </a>
+                    <a href="WFMachinery.aspx">
+                        <span class="material-icons-sharp">Maquinaria
+                        </span>
+                    </a>
+                    <a href="WFProducts.aspx">
+                        <span class="material-icons-sharp">Productos
+                        </span>
+                    </a>
+                    <a href="WFParcel.aspx">
+                        <span class="material-icons-sharp">Parcela
+                        </span>
+                    </a>
+                    <a href="WFCrop.aspx">
+                        <span class="material-icons-sharp">Cultivo
+                        </span>
+                    </a>
+                </div>
+            </aside>
+            <div class="mainForms">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+        </div>
+    </form>
+    </div>
+</body>
+</html>
