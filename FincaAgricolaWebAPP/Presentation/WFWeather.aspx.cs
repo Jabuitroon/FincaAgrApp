@@ -45,7 +45,7 @@ namespace Presentation
         //Evento que se ejecuta al dar clic en el boton Guardar
         protected void BtnSave_Click(object sender, EventArgs e)
         {
-            _temperatura = Convert.ToInt32(TBTemperatra.Text);
+            _temperatura = Convert.ToSingle(TBTemperatra.Text); // Convert to float explicitly  
             _humedad = TBHumedad.Text;
 
             executed = objWeat.saveWeather(_temperatura, _humedad);
@@ -65,7 +65,7 @@ namespace Presentation
         protected void BtnUpdate_Click(object sender, EventArgs e)
         {
             _idWeather = Convert.ToInt32(HFWhatherId.Value);
-            _temperatura = Convert.ToInt32(TBTemperatra.Text);
+            _temperatura = Convert.ToSingle(TBTemperatra.Text); // Convert to float explicitly  
             _humedad = TBHumedad.Text;
 
             executed = objWeat.updateWeather(_idWeather, _temperatura, _humedad);
