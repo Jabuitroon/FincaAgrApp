@@ -23,16 +23,16 @@ namespace Logic
             
             return objPar.showParcelDDL();
         }
-        public bool saveParcel(int _dimenciones, string _ubicacion, int _fkfinca, int _fkclima)
+        public bool saveParcel(int _dimenciones, string _ubicacion, double _Temperatura, double _Humedad, int _fkfinca)
         {
             
-            return objPar.saveParcel(_dimenciones, _ubicacion, _fkfinca, _fkclima);
+            return objPar.saveParcel(_dimenciones, _ubicacion, _Temperatura, _Humedad, _fkfinca);
 
         }
-        public bool updateParcel(int _idParcela, int _dimenciones, string _ubicacion, int _fkfinca, int _fkclima)
+        public bool updateParcel(int _idParcela, int _dimenciones, string _ubicacion, double _Temperatura, double _Humedad, int _fkfinca)
         {
 
-            return objPar.updateParcel(_idParcela, _dimenciones, _ubicacion, _fkfinca, _fkclima);
+            return objPar.updateParcel(_idParcela, _dimenciones, _ubicacion, _Temperatura, _Humedad, _fkfinca);
 
         }
         public bool deleteParcel(int _idParcela)

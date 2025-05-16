@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,128 +11,170 @@ namespace Data
     public class CategoryDat
     {
         Persistence objPer = new Persistence();
+        Orclpersistence objPersistence = new Orclpersistence();
+
+        //Metodo para guardar una nueva Categoria
+        public bool saveCategory( string _nombre, string _description)
+        {
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "procInsertCategory";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("v_nombre", OracleDbType.Varchar2).Value = _nombre;
+                        cmd.Parameters.Add("v_description", OracleDbType.Varchar2).Value = _description;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Int32);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en saveCategory: " + ex.Message, ex);
+            }
+        }
 
         //Metodo para mostrar todas las Categorias
         public DataSet showCategory()
         {
-            MySqlDataAdapter objAdapter = new MySqlDataAdapter();
-            DataSet objData = new DataSet();
+            var farmData = new DataSet();
 
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procSelectCategory";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objAdapter.SelectCommand = objSelectCmd;
-            objAdapter.Fill(objData);
-            objPer.closeConnection();
-            return objData;
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+                    const string query = "SELECT CAT_ID, CAT_NOMBRE, CAT_DESCRIPCION FROM TBL_CATEGORIA";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        adapter.Fill(farmData);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en showCategory: " + ex.Message, ex);
+            }
+            return farmData;
         }
 
         //Metodo para mostrar todas las Categorias
         public DataSet showCategoryDDL()
         {
-            MySqlDataAdapter objAdapter = new MySqlDataAdapter();
-            DataSet objData = new DataSet();
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procSelectCategoryDDL";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objAdapter.SelectCommand = objSelectCmd;
-            objAdapter.Fill(objData);
-            objPer.closeConnection();
-            return objData;
-        }
-
-
-        //Metodo para guardar una nueva Categoria
-        public bool saveCategory( string _nombre, string _description)
-        {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procInsertCategory"; 
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("v_nombre", MySqlDbType.VarString).Value = _nombre;
-            objSelectCmd.Parameters.Add("v_description", MySqlDbType.VarString).Value = _description;
+            var farmData = new DataSet();
 
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "procSelectCategoryDDL";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        adapter.SelectCommand = cmd;
+                        adapter.Fill(farmData);
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("🔴 Error en showCategoryDDL: " + ex.Message, ex);
             }
-            objPer.closeConnection();
-            return executed;
-
+            return farmData;
         }
 
         //Metodo para actualizar una Categoria
         public bool updateCategory(int _idCategory, string _nombre, string _description)
         {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procUpdateCategory"; 
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("v_id", MySqlDbType.Int32).Value = _idCategory;
-            objSelectCmd.Parameters.Add("v_nombre", MySqlDbType.VarString).Value = _nombre;
-            objSelectCmd.Parameters.Add("v_descripcion", MySqlDbType.VarString).Value = _description;
-
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "procUpdateCategory";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("v_id", OracleDbType.Int32).Value = _idCategory;
+                        cmd.Parameters.Add("v_nombre", OracleDbType.Varchar2).Value = _nombre;
+                        cmd.Parameters.Add("v_descripcion", OracleDbType.Varchar2).Value = _description;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Int32);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("🔴 Error en updateCategory: " + ex.Message, ex);
             }
-            objPer.closeConnection();
-            return executed;
-
         }
 
         //Metodo para borrar una Categoria
         public bool deleteCategory(int _idCategory)
         {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procDeleteCategory"; 
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("v_id", MySqlDbType.Int32).Value = _idCategory;
-
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "BEGIN procDeleteCategory(:v_id, :v_result); END;";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    {
+                        cmd.Parameters.Add("v_id", OracleDbType.Int32).Value = _idCategory;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Decimal);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("🔴 Error en deleteCategory: " + ex.Message, ex);
             }
-            objPer.closeConnection();
-            return executed;
-
         }
     }
 }

@@ -38,8 +38,6 @@ namespace Data
 
                         cmd.ExecuteNonQuery();
 
-                        cmd.ExecuteNonQuery();
-
                         var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
 
                         return rowsAffected > 0;
@@ -92,20 +90,23 @@ namespace Data
                     if (conn.State != ConnectionState.Open)
                         throw new Exception("La conexión no se abrió.");
 
-                    const string query = "procSelectWeatherDDL";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    using (OracleCommand cmd = new OracleCommand("procSelectWeatherDDL", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        adapter.SelectCommand = cmd;
-                        adapter.Fill(farmData);
+
+                        // Parámetro de salida: cursor
+                        cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(farmData);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en showWeatherDDL: " + ex.Message, ex);
+                throw new Exception("Error en showWeatherDDL: " + ex.Message, ex);
             }
             return farmData;
         }
@@ -177,7 +178,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en deleteFarm: " + ex.Message, ex);
+                throw new Exception("🔴 Error en deleteWeather: " + ex.Message, ex);
             }
         }
     }

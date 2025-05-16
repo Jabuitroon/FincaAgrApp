@@ -87,23 +87,25 @@ namespace Data
                     if (conn.State != ConnectionState.Open)
                         throw new Exception("La conexión no se abrió.");
 
-                    const string query = "procSelectFinca";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    using (OracleCommand cmd = new OracleCommand("procSelectFincaDDL", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        adapter.SelectCommand = cmd;
-                        adapter.Fill(farmData);
+
+                        // Parámetro de salida: cursor
+                        cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(farmData);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en showFarmDDL: " + ex.Message, ex);
+                throw new Exception("🔴Error en showFarmDDL: " + ex.Message, ex);
             }
-            return farmData;
-
+            return farmData;  
         }
 
         //Metodo para actualizar una Finca
