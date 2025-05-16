@@ -93,14 +93,15 @@ namespace Data
                     if (conn.State != ConnectionState.Open)
                         throw new Exception("La conexión no se abrió.");
 
-                    const string query = "procSelectParcelaDDL";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    using (OracleCommand cmd = new OracleCommand("procSelectParcelaDDL", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        adapter.SelectCommand = cmd;
-                        adapter.Fill(farmData);
+                        cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(farmData);
+                        }
+
                     }
                 }
             }

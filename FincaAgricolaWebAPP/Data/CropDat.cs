@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,127 +11,169 @@ namespace Data
     public class CropDat
     {
         Persistence objPer = new Persistence();
+        Orclpersistence objPersistence = new Orclpersistence();
 
+        // Método para guardar un Cultivo
+        public bool saveCrops(string _nombre, string _descripcion, int _fkParcelaId)
+        {
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "procInsertCrop";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("v_nombre", OracleDbType.Varchar2).Value = _nombre;
+                        cmd.Parameters.Add("v_description", OracleDbType.Varchar2).Value = _descripcion;
+                        cmd.Parameters.Add("v_parcela_id", OracleDbType.Int32).Value = _fkParcelaId;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Int32);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en saveParcel: " + ex.Message, ex);
+            }
+        }
         //Metodo para mostrar todos los Cultivos
         public DataSet showCrops()
         {
-            MySqlDataAdapter objAdapter = new MySqlDataAdapter();
-            DataSet objData = new DataSet();
+            var farmData = new DataSet();
 
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procSelectCrop";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objAdapter.SelectCommand = objSelectCmd;
-            objAdapter.Fill(objData);
-            objPer.closeConnection();
-            return objData;
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+                    const string query = "SELECT * FROM vw_cultivos_parcela";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        adapter.Fill(farmData);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en showParcel: " + ex.Message, ex);
+            }
+            return farmData;
         }
 
         public DataSet showCropsDDL()
         {
-            MySqlDataAdapter objAdapter = new MySqlDataAdapter();
-            DataSet objData = new DataSet();
+            var farmData = new DataSet();
 
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procSelectCropDDL";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objAdapter.SelectCommand = objSelectCmd;
-            objAdapter.Fill(objData);
-            objPer.closeConnection();
-            return objData;
+            //try
+            //{
+            //    using (OracleConnection conn = objPersistence.openConnection())
+            //    {
+            //        if (conn.State != ConnectionState.Open)
+            //            throw new Exception("La conexión no se abrió.");
+            //        const string query = "SELECT * FROM VW_CROP_DDL";
+
+            //        using (OracleCommand cmd = new OracleCommand(query, conn))
+            //        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+            //        {
+            //            adapter.Fill(farmData);
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception("Error en showParcel: " + ex.Message, ex);
+            //}
+            return farmData;
         }
-
-
-        //Metodo para guardar un Cultivo
-        public bool saveCrops(string _nombre, string _descripcion, int _fkParcelaId)
-        {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procInsertCrop";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("v_nombre", MySqlDbType.VarString).Value = _nombre;
-            objSelectCmd.Parameters.Add("v_description", MySqlDbType.VarString).Value = _descripcion;
-            objSelectCmd.Parameters.Add("v_parcela_id", MySqlDbType.Int32).Value = _fkParcelaId;
-            try
-            {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
-                {
-                    executed = true;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error " + e.ToString());
-            }
-            objPer.closeConnection();
-            return executed;
-
-        }
+        
 
         //Metodo para actualizar un Cultivo
         public bool updateCrops(int _idCultivo, string _nombre, string _descripcion, int _fkParcelaId)
         {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procUpdateCrop";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("v_id", MySqlDbType.Int32).Value = _idCultivo;
-            objSelectCmd.Parameters.Add("v_nombre", MySqlDbType.VarString).Value = _nombre;
-            objSelectCmd.Parameters.Add("v_descripcion", MySqlDbType.VarString).Value = _descripcion;
-            objSelectCmd.Parameters.Add("v_parcela_id", MySqlDbType.Int32).Value = _fkParcelaId;
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "procUpdateCrop";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("v_id", OracleDbType.Int32).Value = _idCultivo;
+                        cmd.Parameters.Add("v_nombre", OracleDbType.Varchar2).Value = _nombre;
+                        cmd.Parameters.Add("v_description", OracleDbType.Varchar2).Value = _descripcion;
+                        cmd.Parameters.Add("v_parcela_id", OracleDbType.Int32).Value = _fkParcelaId;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Int32);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("Error en updateParcel: " + ex.Message, ex);
             }
-            objPer.closeConnection();
-            return executed;
-
         }
 
         //Metodo para borrar un Cultivo
         public bool deleteCrops(int _idCultivo)
         {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procDeleteCrop";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("v_id", MySqlDbType.Int32).Value = _idCultivo;
-
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "BEGIN procDeleteCrop(:v_id, :v_result); END;";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    {
+                        cmd.Parameters.Add("v_id", OracleDbType.Int32).Value = _idCultivo;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Decimal);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("🔴 Error en deleteParcel: " + ex.Message, ex);
             }
-            objPer.closeConnection();
-            return executed;
-
         }
     }
 }
