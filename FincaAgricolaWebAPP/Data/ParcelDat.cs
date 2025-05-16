@@ -107,7 +107,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en showCategoryDDL: " + ex.Message, ex);
+                throw new Exception("Error en showParcelDDL: " + ex.Message, ex);
             }
             return farmData;
         }
@@ -182,7 +182,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en deleteParcel: " + ex.Message, ex);
+                throw new Exception("Error en deleteParcel: " + ex.Message, ex);
             }
         }
     }

@@ -43,8 +43,10 @@
                 <asp:BoundField DataField="ins_nombre" HeaderText="Nombre" />
                 <asp:BoundField DataField="ins_tipo" HeaderText="Tipo" />
                 <asp:BoundField DataField="ins_cantidad" HeaderText="Cantidad" />
-                <asp:BoundField DataField="tbl_cultivo_cul_id" HeaderText="Cultivo Id" />
-                <asp:BoundField DataField="tbl_cultivo_tbl_parcela_par_id" HeaderText="Parcela Id" />
+                <asp:BoundField DataField="cultivo_id" HeaderText="Cultivo Id" />
+                <asp:BoundField DataField="cultivo_nombre" HeaderText="Nombre del cultivo" />
+                <asp:BoundField DataField="parcela_id" HeaderText="Parcela Id" />
+                <asp:BoundField DataField="parcela_ubicacion" HeaderText="Parcela Ubicada en" />
                 <asp:CommandField ShowSelectButton="True"></asp:CommandField>
                 <asp:CommandField ShowDeleteButton="True" />
             </Columns>

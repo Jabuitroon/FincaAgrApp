@@ -81,25 +81,31 @@ namespace Data
         {
             var farmData = new DataSet();
 
-            //try
-            //{
-            //    using (OracleConnection conn = objPersistence.openConnection())
-            //    {
-            //        if (conn.State != ConnectionState.Open)
-            //            throw new Exception("La conexión no se abrió.");
-            //        const string query = "SELECT * FROM VW_CROP_DDL";
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
 
-            //        using (OracleCommand cmd = new OracleCommand(query, conn))
-            //        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
-            //        {
-            //            adapter.Fill(farmData);
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception("Error en showParcel: " + ex.Message, ex);
-            //}
+                    using (OracleCommand cmd = new OracleCommand("SELECT * from VW_CROP_DDL", conn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+
+                        // Parámetro de salida: cursor
+                        cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(farmData);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("🔴Error en showCropsDDL: " + ex.Message, ex);
+            }
             return farmData;
         }
         
@@ -139,7 +145,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("Error en updateParcel: " + ex.Message, ex);
+                throw new Exception("Error en updateCrops: " + ex.Message, ex);
             }
         }
 
@@ -172,7 +178,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en deleteParcel: " + ex.Message, ex);
+                throw new Exception("Error en deleteCrops: " + ex.Message, ex);
             }
         }
     }

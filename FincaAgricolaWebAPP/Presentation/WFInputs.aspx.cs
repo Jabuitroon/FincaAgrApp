@@ -66,7 +66,7 @@ namespace Presentation
             TBTipo.Text = GVInputs.SelectedRow.Cells[2].Text;
             TBQuantity.Text = GVInputs.SelectedRow.Cells[3].Text;
             DDLCrops.SelectedValue = GVInputs.SelectedRow.Cells[4].Text;
-            DDLParcela.SelectedValue = GVInputs.SelectedRow.Cells[5].Text;
+            DDLParcela.SelectedValue = GVInputs.SelectedRow.Cells[6].Text;
         }
         protected void BtnSave_Click(object sender, EventArgs e)
         {
