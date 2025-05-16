@@ -43,7 +43,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en showFarm: " + ex.Message, ex);
+                throw new Exception("Error en showFarm: " + ex.Message, ex);
             }
         }
 
@@ -70,7 +70,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en showFarm: " + ex.Message, ex);
+                throw new Exception("Error en showFarm: " + ex.Message, ex);
             }
 
             return farmData;
@@ -103,7 +103,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴Error en showFarmDDL: " + ex.Message, ex);
+                throw new Exception("Error en showFarmDDL: " + ex.Message, ex);
             }
             return farmData;  
         }
@@ -142,7 +142,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en updateFarm: " + ex.Message, ex);
+                throw new Exception("Error en updateFarm: " + ex.Message, ex);
             }
         }
 
@@ -175,7 +175,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en deleteFarm: " + ex.Message, ex);
+                throw new Exception("Error en deleteFarm: " + ex.Message, ex);
             }
         }
     }
