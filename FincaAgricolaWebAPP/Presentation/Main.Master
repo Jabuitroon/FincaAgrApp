@@ -14,7 +14,6 @@
 <body>
     <div class="container-xxl">
     <form id="form1" runat="server">
-        <%--Aqui va lo que se repite en los demas formularios--%>
         <div class="containerAside ">
             <aside>
                 <div class="toggle">

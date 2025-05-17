@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="InputsLog.cs" />
     <Compile Include="IrrigationLog.cs" />
+    <Compile Include="LoginLog.cs" />
     <Compile Include="MachineryLog.cs" />
     <Compile Include="ParcelLog.cs" />
     <Compile Include="ClienteLog.cs" />
