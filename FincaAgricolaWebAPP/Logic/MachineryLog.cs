@@ -9,27 +9,27 @@ namespace Logic
 {
     public class MachineryLog
     {
-        MachineryDat objMac = new MachineryDat();
+        private readonly MachineryDat objMac = new MachineryDat();
 
-        public DataSet showMachinery()
+        public DataSet ShowMachinery()
         {
-            return objMac.showMachinery();
+            return objMac.ShowMachinery();
         }
-        public DataSet showMaquinariaDDL()
+        public DataSet ShowMaquinariaDDL()
         {
-            return objMac.showMaquinariaDDL();
+            return objMac.ShowMaquinariaDDL();
         }
-        public bool saveMachinery(string _nombre, string _descripcion, string _clasificacion, int _fkCultivoId, int _fkParcelaId)
+        public bool SaveMachinery(string _nombre, string _descripcion, string _clasificacion, int _fkCultivoId, int _fkParcelaId)
         {
-            return objMac.saveMachinery(_nombre, _descripcion, _clasificacion, _fkCultivoId, _fkParcelaId);
+            return objMac.SaveMachinery(_nombre, _descripcion, _clasificacion, _fkCultivoId, _fkParcelaId);
         }
-        public bool updateMachinery(int _idMachinery, string _nombre, string _descripcion, string _clasificacion, int _fkCultivoId, int _fkParcelaId)
+        public bool UpdateMachinery(int _idMachinery, string _nombre, string _descripcion, string _clasificacion, int _fkCultivoId, int _fkParcelaId)
         {
-            return objMac.updateMachinery(_idMachinery, _nombre, _descripcion, _clasificacion, _fkCultivoId, _fkParcelaId);
+            return objMac.UpdateMachinery(_idMachinery, _nombre, _descripcion, _clasificacion, _fkCultivoId, _fkParcelaId);
         }
-        public bool deleteMachinery(int _idMachinery)
+        public bool DeleteMachinery(int _idMachinery)
         {
-            return objMac.deleteMachinery(_idMachinery);
+            return objMac.DeleteMachinery(_idMachinery);
         }
     }
 }

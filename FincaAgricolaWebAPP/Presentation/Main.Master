@@ -43,16 +43,8 @@
                         <span class="material-icons-sharp">Categoría de Productos
                         </span>
                     </a>
-                    <a href="WFSupplier.aspx">
-                        <span class="material-icons-sharp">Proveedores
-                        </span>
-                    </a>
                     <a href="WFClient.aspx">
                         <span class="material-icons-sharp">Clientes
-                        </span>
-                    </a>
-                    <a href="WFWeather.aspx">
-                        <span class="material-icons-sharp">Climas
                         </span>
                     </a>
                     <a href="WFInputs.aspx">

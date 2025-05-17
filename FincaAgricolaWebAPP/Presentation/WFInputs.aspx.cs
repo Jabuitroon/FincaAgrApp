@@ -36,7 +36,7 @@ namespace Presentation
         }
         private void showCropDDL()
         {
-            DDLCrops.DataSource = objCrop.showCropsDDL();
+            DDLCrops.DataSource = objCrop.ShowCropsDDL();
             DDLCrops.DataValueField = "cul_id";
             DDLCrops.DataTextField = "nombreCultivo";
             DDLCrops.DataBind();

@@ -24,7 +24,7 @@ namespace Presentation
             if (!Page.IsPostBack)
             {
                 ShowCrops();
-                showParcelDDL();
+                ShowParcelDDL();
 
 
             }
@@ -32,11 +32,11 @@ namespace Presentation
         private void ShowCrops()
         {
             DataSet objData = new DataSet();
-            objData = objCrop.showCrops();
+            objData = objCrop.ShowCrops();
             GVCrop.DataSource = objData;
             GVCrop.DataBind();
         }
-        private void showParcelDDL()
+        private void ShowParcelDDL()
         {
             DDLParcel.DataSource = objPar.showParcelDDL();
             DDLParcel.DataValueField = "par_id";
@@ -44,7 +44,7 @@ namespace Presentation
             DDLParcel.DataBind();
             DDLParcel.Items.Insert(0, "Seleccione");
         }
-        private void clear()
+        private void Clear()
         {
             TBNombre.Text = "";
             TBDescripcion.Text = "";
@@ -62,7 +62,7 @@ namespace Presentation
             {
                 LblMsj.Text = "El cultivo se guardo exitosamente!";
                 ShowCrops();
-                clear();
+                Clear();
             }
             else
             {
@@ -87,11 +87,11 @@ namespace Presentation
             _descripcion = TBNombre.Text;
             _fkParcelaId = Convert.ToInt32(DDLParcel.Text);
 
-            executed = objCrop.updateCrops(_idCultivo, _nombre, _descripcion, _fkParcelaId);
+            executed = objCrop.UpdateCrops(_idCultivo, _nombre, _descripcion, _fkParcelaId);
             if (executed)
             {
                 LblMsj.Text = "El Cultivo se actualizó exitosamente";
-                clear();
+                Clear();
                 ShowCrops();
             }
             else
@@ -105,12 +105,12 @@ namespace Presentation
         {
             int _idCultivo = Convert.ToInt32(GVCrop.DataKeys[e.RowIndex].Values[0]);
 
-            executed = objCrop.deleteCrops(_idCultivo);
+            executed = objCrop.DeleteCrops(_idCultivo);
             if (executed)
             {
                 LblMsj.Text = "El Cultivo se elimino exitosamente";
                 GVCrop.EditIndex = -1;
-                clear();
+                Clear();
                 ShowCrops();
             }
             else

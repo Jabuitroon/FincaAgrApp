@@ -11,29 +11,29 @@ namespace Logic
 {
     public class CropLog
     {
-        CropDat objCro = new CropDat();
+        private readonly CropDat objCro = new CropDat();
         public bool SaveCrops(string _nombre, string _descripcion, int _fkParcelaId)
         {
             return objCro.SaveCrops(_nombre, _descripcion, _fkParcelaId);
         }
 
-        public DataSet showCrops()
+        public DataSet ShowCrops()
         {
-            return objCro.showCrops();
+            return objCro.ShowCrops();
         }
 
-        public DataSet showCropsDDL()
+        public DataSet ShowCropsDDL()
         {
-            return objCro.showCropsDDL();
+            return objCro.ShowCropsDDL();
         }
 
-        public bool updateCrops(int _idCultivo, string _nombre, string _descripcion, int _fkParcelaId)
+        public bool UpdateCrops(int _idCultivo, string _nombre, string _descripcion, int _fkParcelaId)
         {
-            return objCro.updateCrops(_idCultivo, _nombre, _descripcion, _fkParcelaId);
+            return objCro.UpdateCrops(_idCultivo, _nombre, _descripcion, _fkParcelaId);
         }
 
-        public bool deleteCrops(int _idCultivo) { 
-            return objCro.deleteCrops(_idCultivo);
+        public bool DeleteCrops(int _idCultivo) { 
+            return objCro.DeleteCrops(_idCultivo);
         }
     }
 }

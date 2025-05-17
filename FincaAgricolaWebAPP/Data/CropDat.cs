@@ -10,7 +10,7 @@ namespace Data
 {
     public class CropDat
     {
-        Orclpersistence objPersistence = new Orclpersistence();
+        private readonly Orclpersistence objPersistence = new Orclpersistence();
 
         // Método para guardar un Cultivo
         public bool SaveCrops(string _nombre, string _descripcion, int _fkParcelaId)
@@ -50,7 +50,7 @@ namespace Data
             }
         }
         //Metodo para mostrar todos los Cultivos
-        public DataSet showCrops()
+        public DataSet ShowCrops()
         {
             var farmData = new DataSet();
 
@@ -76,7 +76,7 @@ namespace Data
             return farmData;
         }
 
-        public DataSet showCropsDDL()
+        public DataSet ShowCropsDDL()
         {
             var farmData = new DataSet();
 
@@ -110,7 +110,7 @@ namespace Data
         
 
         //Metodo para actualizar un Cultivo
-        public bool updateCrops(int _idCultivo, string _nombre, string _descripcion, int _fkParcelaId)
+        public bool UpdateCrops(int _idCultivo, string _nombre, string _descripcion, int _fkParcelaId)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace Data
         }
 
         //Metodo para borrar un Cultivo
-        public bool deleteCrops(int _idCultivo)
+        public bool DeleteCrops(int _idCultivo)
         {
             try
             {

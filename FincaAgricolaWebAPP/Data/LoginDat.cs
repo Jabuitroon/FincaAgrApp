@@ -9,7 +9,7 @@ namespace Data
 {
     public class LoginDat
     {
-        Orclpersistence objPersistence = new Orclpersistence();
+        private readonly Orclpersistence objPersistence = new Orclpersistence();
         public bool InitLogin(string _user, string _password)
         {
             try
@@ -19,7 +19,7 @@ namespace Data
                     if (conn.State != ConnectionState.Open)
                         throw new Exception("La conexión no se abrió.");
 
-                    string sql = "SELECT COUNT(*) FROM usuarios WHERE username = :username AND password_hash = :password";
+                    string sql = "SELECT COUNT(*) FROM tbl_usuario WHERE USU_USERNAME = :username AND USU_PASSWORD_HASH = :password";
 
                     using (OracleCommand cmd = new OracleCommand(sql, conn))
                     {
