@@ -12,9 +12,9 @@ namespace Logic
     public class CropLog
     {
         CropDat objCro = new CropDat();
-        public bool saveCrops(string _nombre, string _descripcion, int _fkParcelaId)
+        public bool SaveCrops(string _nombre, string _descripcion, int _fkParcelaId)
         {
-            return objCro.saveCrops(_nombre, _descripcion, _fkParcelaId);
+            return objCro.SaveCrops(_nombre, _descripcion, _fkParcelaId);
         }
 
         public DataSet showCrops()

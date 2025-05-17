@@ -12,8 +12,8 @@ namespace Presentation
 {
     public partial class WFCrop : System.Web.UI.Page
     {
-        CropLog objCrop = new CropLog();
-        ParcelLog objPar = new ParcelLog();
+        private readonly CropLog objCrop = new CropLog();
+        private readonly ParcelLog objPar = new ParcelLog();
         private int _idCultivo, _fkParcelaId;
         private string _nombre;
         private string _descripcion;
@@ -23,13 +23,13 @@ namespace Presentation
         {
             if (!Page.IsPostBack)
             {
-                showCrops();
+                ShowCrops();
                 showParcelDDL();
 
 
             }
         }
-        private void showCrops()
+        private void ShowCrops()
         {
             DataSet objData = new DataSet();
             objData = objCrop.showCrops();
@@ -56,12 +56,12 @@ namespace Presentation
             _nombre = TBNombre.Text;
             _descripcion = TBNombre.Text;
             _fkParcelaId = Convert.ToInt32(DDLParcel.Text);
-            executed = objCrop.saveCrops(_nombre, _descripcion, _fkParcelaId);
+            executed = objCrop.SaveCrops(_nombre, _descripcion, _fkParcelaId);
 
             if (executed)
             {
                 LblMsj.Text = "El cultivo se guardo exitosamente!";
-                showCrops();
+                ShowCrops();
                 clear();
             }
             else
@@ -92,7 +92,7 @@ namespace Presentation
             {
                 LblMsj.Text = "El Cultivo se actualizó exitosamente";
                 clear();
-                showCrops();
+                ShowCrops();
             }
             else
             {
@@ -111,7 +111,7 @@ namespace Presentation
                 LblMsj.Text = "El Cultivo se elimino exitosamente";
                 GVCrop.EditIndex = -1;
                 clear();
-                showCrops();
+                ShowCrops();
             }
             else
             {

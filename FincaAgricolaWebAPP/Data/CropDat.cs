@@ -10,11 +10,10 @@ namespace Data
 {
     public class CropDat
     {
-        Persistence objPer = new Persistence();
         Orclpersistence objPersistence = new Orclpersistence();
 
         // Método para guardar un Cultivo
-        public bool saveCrops(string _nombre, string _descripcion, int _fkParcelaId)
+        public bool SaveCrops(string _nombre, string _descripcion, int _fkParcelaId)
         {
             try
             {
