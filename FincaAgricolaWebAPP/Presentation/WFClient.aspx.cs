@@ -12,7 +12,7 @@ namespace Presentation
 {
     public partial class WFClient : System.Web.UI.Page
     {
-        ClienteLog objClient = new ClienteLog();
+        private readonly ClienteLog objClient = new ClienteLog();
         private string _nombre, _correo, _contrasena, _direccion, _ciudad;
         private int idClient;
         private bool executed =  false;
@@ -21,17 +21,17 @@ namespace Presentation
         {
             if (!Page.IsPostBack)
             {
-                showClient();
+                ShowClient();
             }
         }
-        private void showClient()
+        private void ShowClient()
         {
             DataSet objData = new DataSet();
-            objData = objClient.showCliente();
+            objData = objClient.ShowCliente();
             GVClient.DataSource = objData;
             GVClient.DataBind();
         }
-        private void clear()
+        private void Clear()
         {
             TBName.Text = "";
             TBEmail.Text = "";
@@ -49,13 +49,13 @@ namespace Presentation
             _direccion = TBLocation.Text;
             _ciudad = TBCity.Text;
 
-            executed = objClient.updateCliente(idClient, _nombre, _correo, _contrasena, _direccion, _ciudad);
+            executed = objClient.UpdateCliente(idClient, _nombre, _correo, _contrasena, _direccion, _ciudad);
 
             if (executed)
             {
                 LblMsj.Text = "Cliente actualizado exitosamente";
-                clear();
-                showClient();
+                Clear();
+                ShowClient();
             }
             else
             {
@@ -82,13 +82,13 @@ namespace Presentation
             _ciudad = TBCity.Text;
 
 
-            executed = objClient.saveCliente(_nombre, _correo, _contrasena, _direccion, _ciudad);
+            executed = objClient.SaveCliente(_nombre, _correo, _contrasena, _direccion, _ciudad);
 
             if (executed)
             {
                 LblMsj.Text = "Cliente guardado exitosamente";
-                clear();
-                showClient();
+                Clear();
+                ShowClient();
             }
             else
             {
@@ -100,13 +100,13 @@ namespace Presentation
         {
             int _id = Convert.ToInt32(GVClient.DataKeys[e.RowIndex].Values[0]);
 
-            executed = objClient.deleteCliente(_id);
+            executed = objClient.DeleteCliente(_id);
             if (executed)
             {
                 LblMsj.Text = "Cliente eliminado exitosamente";
                 GVClient.EditIndex = -1;
-                clear();
-                showClient();
+                Clear();
+                ShowClient();
             }
             else
             {

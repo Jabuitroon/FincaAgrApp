@@ -54,7 +54,7 @@ namespace Presentation
         }
         private void showClientDDL()
         {
-            DDLClients.DataSource = objClient.showClienteDDL();
+            DDLClients.DataSource = objClient.ShowClienteDDL();
             DDLClients.DataValueField = "cli_id";
             DDLClients.DataTextField = "NombreCompleto";
             DDLClients.DataBind();

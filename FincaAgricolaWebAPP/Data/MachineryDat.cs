@@ -10,8 +10,7 @@ namespace Data
 {
     public class MachineryDat
     {
-        Orclpersistence objPersistence = new Orclpersistence();
-        Persistence objPer = new Persistence();
+        private readonly Orclpersistence objPersistence = new Orclpersistence();
 
         // Método para guardar una Maquinaria
         public bool SaveMachinery(string _nombre, string _descripcion, string _clasificacion, int _fkCultivo, int _fkParcela)
@@ -47,7 +46,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("Error en showFarm: " + ex.Message, ex);
+                throw new Exception("Error en SaveMachinery: " + ex.Message, ex);
             }
         }
 
@@ -151,7 +150,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("Error en updateCrops: " + ex.Message, ex);
+                throw new Exception("Error en UpdateMachinery: " + ex.Message, ex);
             }
         }
 
@@ -184,7 +183,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                throw new Exception("Error en deleteCrops: " + ex.Message, ex);
+                throw new Exception("Error en DeleteMachinery: " + ex.Message, ex);
             }
         }
     }

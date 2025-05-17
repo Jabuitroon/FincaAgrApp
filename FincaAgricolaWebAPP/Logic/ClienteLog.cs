@@ -11,26 +11,26 @@ namespace Logic
 {
     public class ClienteLog
     {
-        ClienteDat objCli = new ClienteDat();
-        public DataSet showCliente()
+        private readonly ClienteDat objCli = new ClienteDat();
+        public DataSet ShowCliente()
         {
-            return objCli.showCliente();
+            return objCli.ShowCliente();
         }
-        public DataSet showClienteDDL()
+        public DataSet ShowClienteDDL()
         {
-            return objCli.showClienteDDL();
+            return objCli.ShowClienteDDL();
         }
-        public bool saveCliente(string _nombre, string _correo, string _contrasena, string _direccion, string _ciudad)
+        public bool SaveCliente(string _nombre, string _correo, string _contrasena, string _direccion, string _ciudad)
         {
-            return objCli.saveCliente(_nombre, _correo, _contrasena, _direccion, _ciudad);
+            return objCli.SaveCliente(_nombre, _correo, _contrasena, _direccion, _ciudad);
         }
-        public bool updateCliente(int _idClient, string _nombre, string _correo, string _contrasena, string _direccion, string _ciudad)
+        public bool UpdateCliente(int _idClient, string _nombre, string _correo, string _contrasena, string _direccion, string _ciudad)
         {
-            return objCli.updateCliente(_idClient, _nombre, _correo, _contrasena, _direccion, _ciudad);
+            return objCli.UpdateCliente(_idClient, _nombre, _correo, _contrasena, _direccion, _ciudad);
         }
-        public bool deleteCliente(int _idClient)
+        public bool DeleteCliente(int _idClient)
         {
-            return objCli.deleteCliente(_idClient);
+            return objCli.DeleteCliente(_idClient);
         }
     }
 }
