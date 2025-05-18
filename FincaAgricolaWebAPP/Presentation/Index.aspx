@@ -2,7 +2,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h1>Finca Agrícola App 🙊</h1>
+    <h1>Finca Agrícola App</h1>
     <asp:Label ID="lblBienvenida" runat="server" Font-Size="Larger" /><br />
-    <asp:Button ID="btnLogout" runat="server" Text="Cerrar sesión" OnClick="btnLogout_Click" />
 </asp:Content>

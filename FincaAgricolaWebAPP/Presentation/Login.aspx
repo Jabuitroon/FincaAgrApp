@@ -30,14 +30,14 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         
                         <div class="form-group text-start mb-3">
-                            <label class="form-label">Member ID</label>
-                            <asp:TextBox class="form-control" id="TBUserName" runat="server" placeholder="User Name"></asp:TextBox>
+                            <label class="form-label">User Name</label>
+                            <asp:TextBox class="form-control" id="TBUserName" runat="server" placeholder="Ingresa un nombre de usuario"></asp:TextBox>
                             <span asp-validation-for="Input.MemberId" class="text-danger"></span>
                         </div>
                         
                         <div class="form-group text-start mb-4">
                             <label class="form-label">Password</label>
-                            <asp:TextBox class="form-control" id="TBUserPassword" runat="server" type="password" placeholder="Password"></asp:TextBox>                         
+                            <asp:TextBox class="form-control" id="TBUserPassword" runat="server" type="password" placeholder="Ingresa una contraseña"></asp:TextBox>                         
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
                         </div>
                         

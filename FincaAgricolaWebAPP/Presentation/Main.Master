@@ -27,10 +27,6 @@
                         <span class="material-icons-sharp">Inicio
                         </span>
                     </a>
-                    <a href="WFUsers.aspx">
-                        <span class="material-icons-sharp">Usuarios
-                        </span>
-                    </a>
                     <a href="WFFarm.aspx">
                         <span class="material-icons-sharp">Finca
                         </span>
@@ -66,6 +62,9 @@
                     <a href="WFCrop.aspx">
                         <span class="material-icons-sharp">Cultivo
                         </span>
+                    </a>
+                    <a>
+                        <asp:Button class="btn btn-outline-secondary" ID="btnLogout" runat="server" Text="Cerrar sesión" OnClick="btnLogout_Click" />
                     </a>
                 </div>
             </aside>

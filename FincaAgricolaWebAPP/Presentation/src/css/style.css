@@ -176,6 +176,16 @@ aside {
             margin-left: 2rem;
             transition: all 0.3s ease;
         }
+	.logout {
+	    display: flex;
+            align-items: center;
+            color: var(--color-info-dark);
+            height: 3.7rem;
+            gap: 1rem;
+            position: relative;
+            margin-left: 2rem;
+            transition: all 0.3s ease;
+	}
 
             aside .sidebar a span {
                 font-size: 1.6rem;
@@ -214,6 +224,9 @@ aside {
                 aside .sidebar a:hover span {
                     margin-left: 0.6rem;
                 }
+		aside .sidebar .logout:hover {
+		    margin-left: 0.6rem;
+		}
 
         aside .sidebar .message-count {
             background-color: var(--color-danger);
