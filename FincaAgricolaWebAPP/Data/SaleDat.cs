@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,109 +10,141 @@ namespace Data
 {
     public class SaleDat
     {
-        Persistence objPer = new Persistence();
-        public DataSet showSale()
-        {          
-            MySqlDataAdapter objAdapter = new MySqlDataAdapter();
-            DataSet objData = new DataSet();
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procSelectSale";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objAdapter.SelectCommand = objSelectCmd;
-            objAdapter.Fill(objData);
-            objPer.closeConnection();
-            return objData;
+        private readonly Orclpersistence objPersistence = new Orclpersistence();
+
+        public bool SaveSale(DateTime _fecha, int _fkProId, int _fkCliId, int _total)
+        {
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "spInsertSale ";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("v_fecha", OracleDbType.Date).Value = _fecha;
+                        cmd.Parameters.Add("vfk_pro_id", OracleDbType.Int32).Value = _fkProId;
+                        cmd.Parameters.Add("vfk_cliente", OracleDbType.Int32).Value = _fkCliId;
+                        cmd.Parameters.Add("v_total", OracleDbType.Int32).Value = _total;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Int32);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en saveParcel: " + ex.Message, ex);
+            }
         }
 
-        public bool saveSale(DateTime _fecha, int _fkProId, int _fkCliId, int _total)
+        public DataSet ShowSale()
         {
-        bool executed = false;
-            int row;
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "spInsertSale"; 
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("v_fecha", MySqlDbType.Date).Value = _fecha;
-            objSelectCmd.Parameters.Add("vfk_pro_id", MySqlDbType.Int32).Value = _fkProId;
-            objSelectCmd.Parameters.Add("vfk_cliente", MySqlDbType.Int32).Value = _fkCliId;
-            objSelectCmd.Parameters.Add("v_total", MySqlDbType.Int32).Value = _total;
+            var farmData = new DataSet();
 
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-
-                
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+                    const string query = "SELECT * FROM vw_ventas";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        adapter.Fill(farmData);
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("Error en ShowSale: " + ex.Message, ex);
             }
-            objPer.closeConnection();          
-            return executed;
-        }
-        public bool updateSale(int idSale, DateTime _fecha, int _total, int _fkProdId, int _fkProId, int _fkCatId, int _fkCliId)
-        {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procUpdateSale";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("ven_id", MySqlDbType.Int32).Value = idSale;
-            objSelectCmd.Parameters.Add("ven_fecha", MySqlDbType.Date).Value = _fecha;
-            objSelectCmd.Parameters.Add("ven_total", MySqlDbType.Int32).Value = _total;
-            objSelectCmd.Parameters.Add("tbl_productos_pro_id", MySqlDbType.Int32).Value = _fkProdId;
-            objSelectCmd.Parameters.Add("tbl_productos_tbl_proveedor_pro_id", MySqlDbType.Int32).Value = _fkProId;
-            objSelectCmd.Parameters.Add("tbl_productos_tbl_categoria_cat_id", MySqlDbType.Int32).Value = _fkCatId;
-            objSelectCmd.Parameters.Add("tbl_cliente_cli_id", MySqlDbType.Int32).Value = _fkCliId;
-
-            try
-            {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
-                {
-                    executed = true;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error " + e.ToString());
-            }
-            objPer.closeConnection();
-            return executed;
+            return farmData;
         }
         
-        public bool deleteSale(int idSale)
+        public bool UpdateSale(int idSale, DateTime _fecha, int _total, int _fkProdId, int _fkProId, int _fkCatId, int _fkCliId)
         {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procDeleteSale"; 
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("V_id", MySqlDbType.Int32).Value = idSale;
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "procUpdateSale";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("v_id", OracleDbType.Int32).Value = idSale;
+                        cmd.Parameters.Add("v_fecha", OracleDbType.Date).Value = _fecha;
+                        cmd.Parameters.Add("vfk_pro_id", OracleDbType.Int32).Value = _fkProId;
+                        cmd.Parameters.Add("vfk_cliente", OracleDbType.Int32).Value = _fkCliId;
+                        cmd.Parameters.Add("v_total", OracleDbType.Int32).Value = _total;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Int32);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("Error en UpdateSale: " + ex.Message, ex);
             }
-            objPer.closeConnection();
-            return executed;
+        }
+        
+        public bool DeleteSale(int idSale)
+        {
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "BEGIN procDeleteSale(:v_id, :v_result); END;";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    {
+                        cmd.Parameters.Add("v_id", OracleDbType.Int32).Value = idSale;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Decimal);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en DeleteSale: " + ex.Message, ex);
+            }
         }
     }
 }

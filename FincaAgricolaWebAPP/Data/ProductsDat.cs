@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +11,7 @@ namespace Data
     public class ProductsDat
     {
         Persistence objPer = new Persistence();
+        private readonly Orclpersistence objPersistence = new Orclpersistence();
         // Método para mostrar los productos
         public DataSet showProducts()
         {
@@ -27,17 +29,32 @@ namespace Data
         //Metodo para mostrar unicamente el id y el nombre
         public DataSet showProductDDL()
         {
-            MySqlDataAdapter objAdapter = new MySqlDataAdapter();
-            DataSet objData = new DataSet();
+            var farmData = new DataSet();
 
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procSelectProductDDL";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objAdapter.SelectCommand = objSelectCmd;
-            objAdapter.Fill(objData);
-            objPer.closeConnection();
-            return objData;
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    using (OracleCommand cmd = new OracleCommand("SELECT pro_id, pro_nombre FROM tbl_producto", conn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(farmData);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("🔴Error en showCropsDDL: " + ex.Message, ex);
+            }
+            return farmData;
         }
 
 
