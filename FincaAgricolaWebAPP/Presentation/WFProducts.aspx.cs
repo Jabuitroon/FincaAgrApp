@@ -74,10 +74,11 @@ namespace Presentation
             TBName.Text = GVPriducts.SelectedRow.Cells[1].Text;
             TBDescription.Text = GVPriducts.SelectedRow.Cells[2].Text;
             TBCantidad.Text = GVPriducts.SelectedRow.Cells[3].Text;
-            TBPrecio.Text = GVPriducts.SelectedRow.Cells[4].Text;
-            TBImg.Text = GVPriducts.SelectedRow.Cells[5].Text;
-            DDLFinca.SelectedValue = GVPriducts.SelectedRow.Cells[6].Text;
-            DDLCategory.SelectedValue = GVPriducts.SelectedRow.Cells[8].Text;
+            TBContenido.Text = GVPriducts.SelectedRow.Cells[4].Text;
+            TBPrecio.Text = GVPriducts.SelectedRow.Cells[5].Text;
+            TBImg.Text = GVPriducts.SelectedRow.Cells[6].Text;
+            DDLFinca.SelectedValue = GVPriducts.SelectedRow.Cells[7].Text;
+            DDLCategory.SelectedValue = GVPriducts.SelectedRow.Cells[9].Text;
         }
 
         protected void BtnSave_Click(object sender, EventArgs e)

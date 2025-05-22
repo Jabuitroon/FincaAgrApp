@@ -23,6 +23,19 @@ namespace Presentation
             }
         }
 
+        private void validator()
+        {
+            var vr = !string.IsNullOrEmpty(TBName.Text) && !string.IsNullOrEmpty(TBLocation.Text);
+            if (vr)
+            {
+                LblMsj.Text = "Los campos son obligatorios";
+            }
+            else
+            {
+                BtnSave.Enabled = true;
+            }
+        }
+
         private void showFarm()
         {
             DataSet objData = new DataSet();
@@ -100,15 +113,14 @@ namespace Presentation
             TBLocation.Text = GVFarm.SelectedRow.Cells[2].Text;
         }
 
-        protected void gvData_RowDataBound(object sender, GridViewRowEventArgs e)
+        protected void TBName_TextChanged(object sender, EventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                e.Row.CssClass = "data-row";
-            }
-            // Aplicar clase a una celda
-            Label lblNombre = (Label)e.Row.FindControl("lblNombre");
-            lblNombre.CssClass = "nombre-celda";
+            validator();
+        }
+
+        protected void TBLocation_TextChanged(object sender, EventArgs e)
+        {
+            validator();
         }
     }
 }
