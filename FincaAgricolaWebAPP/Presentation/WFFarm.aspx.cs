@@ -99,5 +99,16 @@ namespace Presentation
             TBName.Text = GVFarm.SelectedRow.Cells[1].Text;
             TBLocation.Text = GVFarm.SelectedRow.Cells[2].Text;
         }
+
+        protected void gvData_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                e.Row.CssClass = "data-row";
+            }
+            // Aplicar clase a una celda
+            Label lblNombre = (Label)e.Row.FindControl("lblNombre");
+            lblNombre.CssClass = "nombre-celda";
+        }
     }
 }

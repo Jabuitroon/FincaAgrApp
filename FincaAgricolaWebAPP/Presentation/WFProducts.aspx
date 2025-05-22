@@ -15,10 +15,15 @@
     <asp:TextBox ID="TBDescription" runat="server" class="form-control" placeholder="Ingresa una Descripción"></asp:TextBox>
     <Label runat="server">Descripción</Label>
     </div>
-    <%--Cantidad--%>
+    <%--Cantidad inventario--%>
     <div class="form-floating">
     <asp:TextBox ID="TBCantidad" runat="server" class="form-control" placeholder="Ingresa Cantidad (Unds)"></asp:TextBox>
-    <Label>Cantidad (Unds)</Label>
+    <Label>Cantidad en Inventario (Unds)</Label>
+    </div>
+    <%--Contenido--%>
+    <div class="form-floating">
+    <asp:TextBox ID="TBContenido" runat="server" class="form-control" placeholder="Contenido de producto"></asp:TextBox>
+    <Label>Contenido de producto</Label>
     </div>
     <%--Precio--%>
     <div class="form-floating">
@@ -30,9 +35,9 @@
     <asp:TextBox ID="TBImg" runat="server" class="form-control"></asp:TextBox>
     <Label>Añade una Imagen</Label>
     </div>
-    <%--fKProveedor--%>
+    <%--fkfinca--%>
     <div class="form-floating">
-    <asp:DropDownList ID="DDLSupplier" runat="server" class="form-select"></asp:DropDownList>
+    <asp:DropDownList ID="DDLFinca" runat="server" class="form-select"></asp:DropDownList>
     </div>
     <%--fKCategoria--%>
     <div class="form-floating">
@@ -46,11 +51,12 @@
             <asp:BoundField DataField="producto_id" HeaderText="Id" />
             <asp:BoundField DataField="pro_nombre" HeaderText="Nombre" />
             <asp:BoundField DataField="pro_descripcion" HeaderText="Descripción" />
-            <asp:BoundField DataField="pro_cantidad" HeaderText="Cantidad (Unds)" />
+            <asp:BoundField DataField="pro_cantidad_inventario" HeaderText="En inventario" />
+            <asp:BoundField DataField="pro_contenido" HeaderText="Cantidad (Unds)" />
             <asp:BoundField DataField="pro_precio" HeaderText="Precio" />
             <asp:BoundField DataField="pro_img" HeaderText="LinkFoto" />
-            <asp:BoundField DataField="tbl_proveedor_pro_id" HeaderText="Proveedor ID" />
-            <asp:BoundField DataField="proveedor_nombre" HeaderText="Nombre Proveedor" />
+            <asp:BoundField DataField="Finca_ID" HeaderText="Finca ID" />
+            <asp:BoundField DataField="Nombre_Finca" HeaderText="Nombre de Finca" />
             <asp:BoundField DataField="tbl_categoria_cat_id" HeaderText="Categoría Id" />
             <asp:BoundField DataField="cat_nombre" HeaderText="Nombre Categoría" />
             <asp:CommandField ShowSelectButton="true" />

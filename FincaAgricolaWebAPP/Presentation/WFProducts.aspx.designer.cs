@@ -51,6 +51,15 @@ namespace Presentation
         protected global::System.Web.UI.WebControls.TextBox TBCantidad;
 
         /// <summary>
+        /// Control TBContenido.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TBContenido;
+
+        /// <summary>
         /// Control TBPrecio.
         /// </summary>
         /// <remarks>
@@ -69,13 +78,13 @@ namespace Presentation
         protected global::System.Web.UI.WebControls.TextBox TBImg;
 
         /// <summary>
-        /// Control DDLSupplier.
+        /// Control DDLFinca.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DDLSupplier;
+        protected global::System.Web.UI.WebControls.DropDownList DDLFinca;
 
         /// <summary>
         /// Control DDLCategory.

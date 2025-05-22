@@ -88,20 +88,22 @@ namespace Data
                     if (conn.State != ConnectionState.Open)
                         throw new Exception("La conexión no se abrió.");
 
-                    const string query = "procSelectCategoryDDL";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    using (OracleCommand cmd = new OracleCommand("SELECT cat_id, cat_id || ' ' || cat_nombre AS nombre FROM tbl_categoria", conn))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        adapter.SelectCommand = cmd;
-                        adapter.Fill(farmData);
+                        cmd.CommandType = CommandType.Text;
+
+                        cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            adapter.Fill(farmData);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("🔴 Error en showCategoryDDL: " + ex.Message, ex);
+                throw new Exception("🔴Error en showCropsDDL: " + ex.Message, ex);
             }
             return farmData;
         }

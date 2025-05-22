@@ -4,6 +4,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
@@ -13,11 +14,11 @@ namespace Presentation
 {
     public partial class WFProducts : System.Web.UI.Page
     {
-        ProductsLog objProducts = new ProductsLog();
-        SupplierLog objSupplier = new SupplierLog();
-        CategoryLog objCategory = new CategoryLog();
+        private readonly ProductsLog objProducts = new ProductsLog();
+        private readonly FincaLog objFinca = new FincaLog();
+        private readonly CategoryLog objCategory = new CategoryLog();
 
-        private int _idProduct, _quantity, _fkProvider, _fkCategory;
+        private int _idProduct, _quantity, _content, _fkFarm, _fkCategory;
         private string _name, _description, _img;
         private double _price;
 
@@ -27,25 +28,25 @@ namespace Presentation
             if (!Page.IsPostBack)
             {
                 showProducts();
-                showSuppliersDDL();
+                showFarmDDL();
                 showCategoriesDDL();
             }
         }
 
         private void showProducts() {
             DataSet objData = new DataSet();
-            objData = objProducts.showProducts();
+            objData = objProducts.ShowProducts();
             GVPriducts.DataSource = objData;
             GVPriducts.DataBind();
         }
 
-        private void showSuppliersDDL()
+        private void showFarmDDL()
         {
-            DDLSupplier.DataSource = objSupplier.showSupplierDDL();
-            DDLSupplier.DataValueField = "pro_id";
-            DDLSupplier.DataTextField = "nombreProveedor";
-            DDLSupplier.DataBind();
-            DDLSupplier.Items.Insert(0, "Seleccione un Producto");
+            DDLFinca.DataSource = objFinca.showFarmDDL();
+            DDLFinca.DataValueField = "fin_id";
+            DDLFinca.DataTextField = "nombre";
+            DDLFinca.DataBind();
+            DDLFinca.Items.Insert(0, "Seleccione una finca");
         }
 
         private void showCategoriesDDL()
@@ -63,7 +64,7 @@ namespace Presentation
             TBDescription.Text = "";
             TBCantidad.Text = "";
             TBPrecio.Text = "";
-            DDLSupplier.SelectedIndex = 0;
+            DDLFinca.SelectedIndex = 0;
             DDLCategory.SelectedIndex = 0;
         }
 
@@ -75,7 +76,7 @@ namespace Presentation
             TBCantidad.Text = GVPriducts.SelectedRow.Cells[3].Text;
             TBPrecio.Text = GVPriducts.SelectedRow.Cells[4].Text;
             TBImg.Text = GVPriducts.SelectedRow.Cells[5].Text;
-            DDLSupplier.SelectedValue = GVPriducts.SelectedRow.Cells[6].Text;
+            DDLFinca.SelectedValue = GVPriducts.SelectedRow.Cells[6].Text;
             DDLCategory.SelectedValue = GVPriducts.SelectedRow.Cells[8].Text;
         }
 
@@ -84,12 +85,14 @@ namespace Presentation
             _name = TBName.Text;
             _description = TBDescription.Text;
             _quantity = Convert.ToInt32(TBCantidad.Text);
+            _content = Convert.ToInt32(TBContenido.Text);
             _price =  Convert.ToDouble(TBPrecio.Text);
             _img = TBImg.Text;
-            _fkProvider = Convert.ToInt32(DDLSupplier.SelectedValue);
+
+            _fkFarm = Convert.ToInt32(DDLFinca.SelectedValue);
             _fkCategory = Convert.ToInt32(DDLCategory.SelectedValue);
             
-            executed = objProducts.saveProducts(_name, _description, _quantity, _price, _img, _fkProvider, _fkCategory);
+            executed = objProducts.SaveProducts(_name, _description, _quantity, _content, _price, _img, _fkFarm, _fkCategory);
 
             if (executed)
             {
@@ -109,12 +112,14 @@ namespace Presentation
             _name = TBName.Text;
             _description = TBDescription.Text;
             _quantity = Convert.ToInt32(TBCantidad.Text);
+            _content = Convert.ToInt32(TBContenido.Text);
             _price = Convert.ToDouble(TBPrecio.Text);
             _img = TBImg.Text;
-            _fkProvider = Convert.ToInt32(DDLSupplier.SelectedValue);
+
+            _fkFarm = Convert.ToInt32(DDLFinca.SelectedValue);
             _fkCategory = Convert.ToInt32(DDLCategory.SelectedValue);
 
-            executed = objProducts.updateProducts(_idProduct, _name, _description, _quantity, _price, _img, _fkProvider, _fkCategory);
+            executed = objProducts.UpdateProducts(_idProduct, _name, _description, _quantity, _content, _price, _img, _fkFarm, _fkCategory);
 
             if (executed)
             {
@@ -132,7 +137,7 @@ namespace Presentation
         {
             int _idProduct = Convert.ToInt32(GVPriducts.DataKeys[e.RowIndex].Values[0]);
 
-            executed = objProducts.deleteProducts(_idProduct);
+            executed = objProducts.DeleteProducts(_idProduct);
             if (executed)
             {
                 LblMsj.Text = "Producto eliminado exitosamente";

@@ -12,22 +12,77 @@ namespace Data
     {
         Persistence objPer = new Persistence();
         private readonly Orclpersistence objPersistence = new Orclpersistence();
-        // Método para mostrar los productos
-        public DataSet showProducts()
+
+        //Metodo para guardar un nuevo producto
+        public bool SaveProducts(string _name, string _description, int _quantity, int _content, double _price, string _img, int _fkFarm, int _fkCategory)
         {
-            MySqlDataAdapter objAdapter = new MySqlDataAdapter();
-            DataSet objData = new DataSet();
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procSelectProduct";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objAdapter.SelectCommand = objSelectCmd;
-            objAdapter.Fill(objData);
-            objPer.closeConnection();
-            return objData;
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "procInsertProduct";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("v_nombre", OracleDbType.Varchar2).Value = _name;
+                        cmd.Parameters.Add("v_ubicacion", OracleDbType.Varchar2).Value = _description;
+                        cmd.Parameters.Add("v_cantidad_inventario", OracleDbType.Int32).Value = _quantity;
+                        cmd.Parameters.Add("v_contenido", OracleDbType.Int32).Value = _content;
+                        cmd.Parameters.Add("v_precio", OracleDbType.Double).Value = _price;
+                        cmd.Parameters.Add("v_img", OracleDbType.Varchar2).Value = _img;
+                        cmd.Parameters.Add("vfk_finca", OracleDbType.Int32).Value = _fkFarm;
+                        cmd.Parameters.Add("vfk_categorias", OracleDbType.Int32).Value = _fkCategory;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Int32);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en saveProducts: " + ex.Message, ex);
+            }
+        }
+
+        // Método para mostrar los productos
+        public DataSet ShowProducts()
+        {
+            var farmData = new DataSet();
+            try
+            {
+                using (OracleConnection conn = objPersistence.openConnection())
+                {
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "select * from vw_products";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        adapter.Fill(farmData);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en showFarm: " + ex.Message, ex);
+            }
+
+            return farmData;
         }
         //Metodo para mostrar unicamente el id y el nombre
-        public DataSet showProductDDL()
+        public DataSet ShowProductDDL()
         {
             var farmData = new DataSet();
 
@@ -56,106 +111,82 @@ namespace Data
             }
             return farmData;
         }
-
-
-        //Metodo para guardar un nuevo producto
-        public bool saveProducts(string _name, string _description, int _quantity, double _price, string _img, int _fkProvider, int _fkCategory)
-        {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procInsertProduct";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-
-            objSelectCmd.Parameters.Add("v_nombre", MySqlDbType.VarString).Value = _name;
-            objSelectCmd.Parameters.Add("v_description", MySqlDbType.VarString).Value = _description;
-            objSelectCmd.Parameters.Add("v_cantidad", MySqlDbType.Int32).Value = _quantity;
-            objSelectCmd.Parameters.Add("v_precio", MySqlDbType.Double).Value = _price;
-            objSelectCmd.Parameters.Add("v_img", MySqlDbType.Text).Value = _img;
-            objSelectCmd.Parameters.Add("vfk_proveedor", MySqlDbType.Int32).Value = _fkProvider;
-            objSelectCmd.Parameters.Add("vfk_categorias", MySqlDbType.Int32).Value = _fkCategory;
-
-            try
-            {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
-                {
-                    executed = true;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error " + e.ToString());
-            }
-            objPer.closeConnection();
-
-            return executed;
-        }
         
         //Metodo para actulizar un producto
-        public bool updateProducts(int _idProduct, string _name, string _description, int _quantity, double _price, string _img, int _fkProvider, int _fkCategory)
+        public bool updateProducts(int _idProduct, string _name, string _description, int _quantity, int _content, double _price, string _img, int _fkFarm, int _fkCategory)
         {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procUpdateProduct";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-
-            objSelectCmd.Parameters.Add("v_id", MySqlDbType.Int32).Value = _idProduct;
-            objSelectCmd.Parameters.Add("v_nombre", MySqlDbType.VarString).Value = _name;
-            objSelectCmd.Parameters.Add("v_descripcion", MySqlDbType.VarString).Value = _description;
-            objSelectCmd.Parameters.Add("v_cantidad", MySqlDbType.Int32).Value = _quantity;
-            objSelectCmd.Parameters.Add("v_precio", MySqlDbType.Double).Value = _price;
-            objSelectCmd.Parameters.Add("v_img", MySqlDbType.Text).Value = _img;
-            objSelectCmd.Parameters.Add("vfk_proveedor", MySqlDbType.Int32).Value = _fkProvider;
-            objSelectCmd.Parameters.Add("vfk_categorias", MySqlDbType.Int32).Value = _fkCategory;
-
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "procUpdateFinca";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("v_id", OracleDbType.Int32).Value = _idProduct;
+                        cmd.Parameters.Add("v_nombre", OracleDbType.Varchar2).Value = _name;
+                        cmd.Parameters.Add("v_ubicacion", OracleDbType.Varchar2).Value = _description;
+                        cmd.Parameters.Add("v_cantidad_inventario", OracleDbType.Int32).Value = _quantity;
+                        cmd.Parameters.Add("v_contenido", OracleDbType.Int32).Value = _content;
+                        cmd.Parameters.Add("v_precio", OracleDbType.Double).Value = _price;
+                        cmd.Parameters.Add("v_img", OracleDbType.Varchar2).Value = _img;
+                        cmd.Parameters.Add("vfk_finca", OracleDbType.Int32).Value = _fkFarm;
+                        cmd.Parameters.Add("vfk_categorias", OracleDbType.Int32).Value = _fkCategory;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Int32);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("Error en updateFarm: " + ex.Message, ex);
             }
-            objPer.closeConnection();
-            return executed;
         }
 
         //Metodo para borrar una Categoria
-        public bool deleteProducts(int _idProduct)
+        public bool DeleteProducts(int _idProduct)
         {
-            bool executed = false;
-            int row;
-
-            MySqlCommand objSelectCmd = new MySqlCommand();
-            objSelectCmd.Connection = objPer.openConnection();
-            objSelectCmd.CommandText = "procDeleteProduct";
-            objSelectCmd.CommandType = CommandType.StoredProcedure;
-            objSelectCmd.Parameters.Add("v_id", MySqlDbType.Int32).Value = _idProduct;
-
             try
             {
-                row = objSelectCmd.ExecuteNonQuery();
-                if (row == 1)
+                using (OracleConnection conn = objPersistence.openConnection())
                 {
-                    executed = true;
+                    if (conn.State != ConnectionState.Open)
+                        throw new Exception("La conexión no se abrió.");
+
+                    const string query = "BEGIN procDeleteProduct(:v_id, :v_result); END;";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    {
+                        cmd.Parameters.Add("v_id", OracleDbType.Int32).Value = _idProduct;
+
+                        var outputParam = cmd.Parameters.Add("v_result", OracleDbType.Decimal);
+                        outputParam.Direction = ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        var rowsAffected = ((Oracle.ManagedDataAccess.Types.OracleDecimal)outputParam.Value).ToInt32();
+
+                        return rowsAffected > 0;
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error " + e.ToString());
+                throw new Exception("Error en deleteFarm: " + ex.Message, ex);
             }
-            objPer.closeConnection();
-            return executed;
         }
     }
 }

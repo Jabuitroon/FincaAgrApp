@@ -11,26 +11,26 @@ namespace Logic
 {
     public class ProductsLog
     {
-        ProductsDat objPro = new ProductsDat();
-        public DataSet showProducts()
+        private readonly ProductsDat objPro = new ProductsDat();
+        public DataSet ShowProducts()
         {
-            return objPro.showProducts();
+            return objPro.ShowProducts();
         }
-        public DataSet showProductDDL()
+        public DataSet ShowProductDDL()
         {           
-            return objPro.showProductDDL();
+            return objPro.ShowProductDDL();
         }
-        public bool saveProducts(string _name, string _description, int _quantity, double _price, string _img, int _fkProvider, int _fkCategory)
+        public bool SaveProducts(string _name, string _description, int _quantity, int _content, double _price, string _img, int _fkFarm, int _fkCategory)
         {
-            return objPro.saveProducts(_name, _description, _quantity, _price, _img, _fkProvider, _fkCategory);
+            return objPro.SaveProducts(_name, _description, _quantity, _content, _price, _img, _fkFarm, _fkCategory);
         }
-        public bool updateProducts(int _idProduct, string _name, string _description, int _quantity, double _price, string _img, int _fkProvider, int _fkCategory)
+        public bool UpdateProducts(int _idProduct, string _name, string _description, int _quantity, int _content, double _price, string _img, int _fkFarm, int _fkCategory)
         {
-            return objPro.updateProducts(_idProduct, _name, _description, _quantity, _price, _img, _fkProvider, _fkCategory);
+            return objPro.updateProducts(_idProduct, _name, _description, _quantity, _content, _price, _img, _fkFarm, _fkCategory);
         }
-        public bool deleteProducts(int _idProduct)
+        public bool DeleteProducts(int _idProduct)
         {
-            return objPro.deleteProducts(_idProduct);   
+            return objPro.DeleteProducts(_idProduct);   
         }
     }
 }

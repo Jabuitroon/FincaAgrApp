@@ -46,7 +46,7 @@ namespace Presentation
 
         private void showProductsDDL()
         {
-            DDLProcucts.DataSource = objProduct.showProductDDL();
+            DDLProcucts.DataSource = objProduct.ShowProductDDL();
             DDLProcucts.DataValueField = "pro_id";
             DDLProcucts.DataTextField = "pro_nombre";
             DDLProcucts.DataBind();
